@@ -19,15 +19,15 @@ public class BusinessCard {
     private String name;
 
     @Column(nullable = false)
-    private String company_name;
+    private String companyName;
 
     private String department;
-    private String phone_number;
+    private String phoneNumber;
     private String email;
-    private String company_email;
-    private String company_location;
+    private String companyEmail;
+    private String companyLocation;
     private String sns;
-    private String company_number;
+    private String companyNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")  // 유저에게 명함을 받은 것
