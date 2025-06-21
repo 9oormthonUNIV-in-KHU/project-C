@@ -17,7 +17,7 @@ public class CardSummaryResponse {
         return CardSummaryResponse.builder()
                 .cardId(businessCard.getId())
                 .name(businessCard.getName())
-                .companyName(businessCard.getCompany_name())
+                .companyName(businessCard.getCompanyName())
                 .department(businessCard.getDepartment())
                 .build();
     }
