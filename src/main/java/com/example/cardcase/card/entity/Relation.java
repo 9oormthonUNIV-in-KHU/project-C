@@ -1,8 +1,7 @@
 package com.example.cardcase.card.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import com.example.cardcase.oauth.domain.entity.Member;
+import jakarta.persistence.*;
 
 @Entity
 public class Relation {
@@ -11,7 +10,12 @@ public class Relation {
     @GeneratedValue
     private Long id;
 
-    private Long given_bc_id;
-    private Long user_id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")  // 유저에게 명함을 받은 것
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "given_bc_id")  // 받은 명함
+    private BusinessCard businessCard;
 }

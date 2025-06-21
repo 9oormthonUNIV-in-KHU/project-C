@@ -1,8 +1,9 @@
 package com.example.cardcase.card.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class BusinessCard {
@@ -21,4 +22,7 @@ public class BusinessCard {
     private String sns;
     private String company_number;
 
+
+    @OneToMany(mappedBy = "businessCard" , cascade = CascadeType.ALL)
+    private List<Relation> relations = new ArrayList<>();
 }
