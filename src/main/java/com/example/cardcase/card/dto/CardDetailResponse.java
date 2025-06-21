@@ -22,14 +22,14 @@ public class CardDetailResponse {
         return CardDetailResponse.builder()
                 .cardId(businessCard.getId())
                 .name(businessCard.getName())
-                .companyName(businessCard.getCompany_name())
+                .companyName(businessCard.getCompanyName())
                 .department(businessCard.getDepartment())
-                .phoneNumber(businessCard.getPhone_number())
+                .phoneNumber(businessCard.getPhoneNumber())
                 .email(businessCard.getEmail())
-                .companyEmail(businessCard.getCompany_email())
-                .companyLocation(businessCard.getCompany_location())
+                .companyEmail(businessCard.getCompanyEmail())
+                .companyLocation(businessCard.getCompanyLocation())
                 .sns(businessCard.getSns())
-                .companyNumber(businessCard.getCompany_number())
+                .companyNumber(businessCard.getCompanyNumber())
                 .build();
     }
 }
