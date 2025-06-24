@@ -6,18 +6,18 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CardDetailResponse {
-    private Long cardId;
-    private String name;
-    private String companyName;
-    private String department;
-    private String phoneNumber;
-    private String email;
-    private String companyEmail;
-    private String companyLocation;
-    private String sns;
-    private String companyNumber;
-
+public record CardDetailResponse (
+    Long cardId,
+    String name,
+    String companyName,
+    String department,
+    String phoneNumber,
+    String email,
+    String companyEmail,
+    String companyLocation,
+    String sns,
+    String companyNumber
+) {
     public static CardDetailResponse from(BusinessCard businessCard) {
         return CardDetailResponse.builder()
                 .cardId(businessCard.getId())
