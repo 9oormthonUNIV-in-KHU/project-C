@@ -1,4 +1,7 @@
 package com.example.cardcase.card.repository;
 
-public class BusinessCardRepository {
+import com.example.cardcase.card.entity.BusinessCard;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface BusinessCardRepository extends JpaRepository<BusinessCard, Long> {
 }
