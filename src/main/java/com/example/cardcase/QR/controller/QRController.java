@@ -12,7 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/qr")
+@RequestMapping("/api/v1/qr")
 public class QRController {
 
 
