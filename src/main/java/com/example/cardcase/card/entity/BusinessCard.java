@@ -40,4 +40,8 @@ public class BusinessCard {
     public void disown() {
         this.member = null;
     }
+
+    public boolean isOwner(Member creator) {
+        return member.equals(creator);
+    }
 }
