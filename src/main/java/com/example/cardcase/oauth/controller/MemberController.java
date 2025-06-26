@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.cardcase.common.security.*;
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class MemberController {
 
     private final MemberService memberService;
