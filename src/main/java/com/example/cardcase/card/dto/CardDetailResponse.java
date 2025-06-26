@@ -2,9 +2,7 @@ package com.example.cardcase.card.dto;
 
 import com.example.cardcase.card.entity.BusinessCard;
 import lombok.Builder;
-import lombok.Getter;
 
-@Getter
 @Builder
 public record CardDetailResponse (
     Long cardId,
