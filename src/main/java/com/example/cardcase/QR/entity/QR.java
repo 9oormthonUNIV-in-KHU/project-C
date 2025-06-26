@@ -6,7 +6,7 @@ import jakarta.persistence.Id;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-@Getter
+@Data
 @Entity
 public class QR {
     @Id @GeneratedValue
