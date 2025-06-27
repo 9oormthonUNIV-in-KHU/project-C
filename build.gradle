@@ -50,6 +50,11 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     runtimeOnly 'com.mysql:mysql-connector-j:8.0.33'
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+
+// QR 코드 생성을 위한 코드
+    implementation 'com.google.zxing:core:3.5.3'
+    implementation 'com.google.zxing:javase:3.5.3'
+
 }
 
 tasks.named('test') {
