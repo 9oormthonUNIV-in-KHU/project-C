@@ -55,6 +55,13 @@ dependencies {
     implementation 'com.google.zxing:core:3.5.3'
     implementation 'com.google.zxing:javase:3.5.3'
 
+    //이메일 인증 기능을 위한 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+
+    // 카카오 네이버와 같은 소셜 로그인을 위한
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
 }
 
 tasks.named('test') {
