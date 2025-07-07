@@ -18,8 +18,9 @@ import java.util.List;
 @Entity
 @Table(name = "member") // 테이블명 멤버로
 public class Member {
+
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String email;

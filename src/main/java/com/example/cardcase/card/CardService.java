@@ -12,6 +12,7 @@ import com.example.cardcase.oauth.domain.entity.Member;
 import com.example.cardcase.oauth.repository.MemberRepository; // Member 조회를 위해 필요
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,8 +33,9 @@ public class CardService {
     /**
      * 공유받은 명함 상세 조회
      */
-    public List<CardSummaryResponse> getCardList(Long memberId) {
-        Member member = findMemberById(memberId);
+    public List<CardSummaryResponse> getCardList(String memberEmail) {
+        System.out.println(memberEmail);
+        Member member = findMemberByEmail(memberEmail);
         List<Relation> relations = relationRepository.findByMember(member);
 
         return relations.stream()
@@ -44,8 +46,18 @@ public class CardService {
     /**
      * 명함 상세 조회
      */
-    public CardDetailResponse getCardDetail(Long cardId) {
+    public CardDetailResponse getCardDetail(String memberEmail, Long cardId) {
+        Member member = findMemberByEmail(memberEmail);
         BusinessCard businessCard = findBusinessCardById(cardId);
+
+        if (businessCard.getMember().equals(member)) {
+            return CardDetailResponse.from(businessCard);
+        }
+
+        relationRepository.findByMemberAndBusinessCardId(member, cardId)
+                .orElseThrow(() -> new CoreException(GlobalErrorType.NOT_ALLOWED));
+
+
         return CardDetailResponse.from(businessCard);
     }
 
@@ -53,41 +65,42 @@ public class CardService {
      * 공유받은 명함 삭제 (Relation 삭제)
      */
     @Transactional
-    public void removeCardFromMyCase(Long memberId, Long cardId) {
-        Member member = findMemberById(memberId);
+    public void removeCardFromMyCase(String memberEmail, Long cardId) {
+        Member member = findMemberByEmail(memberEmail);
+
         Relation relation = relationRepository.findByMemberAndBusinessCardId(member, cardId)
-                .orElseThrow(() -> new EntityNotFoundException("해당 명함을 명함첩에서 찾을 수 없습니다."));
+                .orElseThrow(() -> new CoreException(GlobalErrorType.CARD_NOT_FOUND));
 
         relationRepository.delete(relation);
     }
 
     /**
-     * 명함 원본 삭제 (BusinessCard 삭제)
-     * TODO: 이 명함을 받은 모든 사람의 명함첩에서도 사라지게 됨.
-     *       권한 검증 코드 넣기. (자신이 만든 명함만 삭제 가능하도록)
-     *       삭제하기 보다는 user와의 연결을 끊는 방식으로 개선시키기
+     * 명함 원본 삭제
      */
     @Transactional
-    public void deleteBusinessCard(Long memberId, Long cardId) throws AccessDeniedException {
+    public void deleteBusinessCard(String memberEmail, Long cardId) throws AccessDeniedException {
         BusinessCard businessCard = findBusinessCardById(cardId);
+        Member member = findMemberByEmail(memberEmail);
+        if (businessCard.getMember().equals(member)) {
+            relationRepository.deleteByBusinessCard(businessCard);
 
-        if(businessCard.getMember() == null){
-            throw new CoreException(GlobalErrorType.E500);
+            //TODO: 추후에는 실제 삭제하고 백업서버에 원본 저장하기.
+            businessCard.disown();
+            //businessCardRepository.delete(businessCard);
+        }
+        else {
+            throw new CoreException(GlobalErrorType.NOT_ALLOWED);
         }
 
-        businessCard.disown();
-        //트랜잭션이 있으므로 리포지토리 저장은 자동으로 발생!
     }
 
-    // --- 2번 이상 중복되는 코드 빼기 ---
-    // TODO: 짧은 코드인데 함수로 빼는게 나은걸까?
-    private Member findMemberById(Long memberId) {
-        return memberRepository.findById(memberId)
+    private Member findMemberByEmail(String memberEmail) {
+        return memberRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new CoreException(GlobalErrorType.MEMBER_NOT_FOUND));
     }
 
     private BusinessCard findBusinessCardById(Long cardId) {
         return businessCardRepository.findById(cardId)
-                .orElseThrow(() -> new EntityNotFoundException("명함을 찾을 수 없습니다. ID: " + cardId));
+                .orElseThrow(() -> new CoreException(GlobalErrorType.CARD_NOT_FOUND));
     }
 }
