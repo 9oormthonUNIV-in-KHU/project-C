@@ -10,9 +10,7 @@ import com.example.cardcase.common.apiPayload.error.CoreException;
 import com.example.cardcase.common.apiPayload.error.GlobalErrorType;
 import com.example.cardcase.oauth.domain.entity.Member;
 import com.example.cardcase.oauth.repository.MemberRepository; // Member 조회를 위해 필요
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -77,7 +75,7 @@ public class CardService {
      * 명함 원본 삭제
      */
     @Transactional
-    public void deleteBusinessCard(String memberEmail, Long cardId) throws AccessDeniedException {
+    public void deleteBusinessCard(String memberEmail, Long cardId) {
         BusinessCard businessCard = findBusinessCardById(cardId);
         Member member = findMemberByEmail(memberEmail);
         if (businessCard.getMember().equals(member)) {
