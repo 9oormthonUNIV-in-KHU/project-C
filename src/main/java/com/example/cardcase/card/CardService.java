@@ -34,7 +34,6 @@ public class CardService {
      * 공유받은 명함 상세 조회
      */
     public List<CardSummaryResponse> getCardList(String memberEmail) {
-        System.out.println(memberEmail);
         Member member = findMemberByEmail(memberEmail);
         List<Relation> relations = relationRepository.findByMember(member);
 
