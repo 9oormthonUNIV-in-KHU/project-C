@@ -12,6 +12,14 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
    Optional<Member> findByEmail (String email);
    @Query("SELECT new com.example.cardcase.oauth.domain.dto.MemberDto(m.id, m.email, m.name) "
            + "FROM Member m")
-   List<MemberDto> findAllMemberDtos();
+   Optional<Member> findById(String Id);
+
+   // data jpa가 이해를 못해서 이렇게 썻어요.
+   @Query("SELECT new com.example.cardcase.oauth.domain.dto.MemberDto(m.id, m.email, m.name) FROM Member m")
+   List<MemberDto> findAllMember();
+
    boolean existsByEmail(String email);
+
+   Optional<Member> findBySocialId(String socialId);
+
 }

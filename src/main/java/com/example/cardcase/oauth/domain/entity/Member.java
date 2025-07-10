@@ -22,6 +22,13 @@ public class Member {
     @GeneratedValue
     private Long id;
 
+// 소셜 로그인을 위한 ID
+    @Column(unique = true)
+    private String socialId;
+
+    @Column(unique = true)
+    private String provider; // 카카오 구글 네이버 중 하나
+    private String providerId;
     private String email;
     private String password;
     private String name;

@@ -5,6 +5,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.data.redis.core.RedisTemplate;
+
+import java.util.concurrent.TimeUnit;
+
 @Service
 @RequiredArgsConstructor
 public class RefreshTokenService {
@@ -14,15 +17,16 @@ public class RefreshTokenService {
     @Value("${jwt.refresh-expiration-time}")
     private long refreshTokenExpirationTime;
 
-    private String getKey(String username){
-        return "refresh_token:" + username;
+    private String getKey(String name){
+        return "refresh_token:" + name;
     }
 
-    public void saveRefreshToken(String username, String refreshToken) {
+    public void saveRefreshToken(String name, String refreshToken) {
         redisTemplate.opsForValue().set(
-                getKey(username),
+                getKey(name),
                 refreshToken,
-                refreshTokenExpirationTime
+                refreshTokenExpirationTime,
+                TimeUnit.MILLISECONDS
         );
     }
 
