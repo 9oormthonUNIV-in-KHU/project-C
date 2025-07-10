@@ -4,6 +4,8 @@ import com.example.cardcase.card.dto.CardDetailResponse;
 import com.example.cardcase.card.dto.CardSummaryResponse;
 import com.example.cardcase.common.apiPayload.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.nio.file.AccessDeniedException;
@@ -20,19 +22,24 @@ public class CardController {
      */
     @GetMapping
     public ApiResponse<List<CardSummaryResponse>> getMyCardList(
-            // TODO: @AuthenticationPrincipal 로 로그인 사용자 정보 가져오기
-            @RequestParam Long memberId // 임시 파라미터
+            @AuthenticationPrincipal User userPrincipal
     ) {
-        List<CardSummaryResponse> cardList = cardService.getCardList(memberId);
+        String memberEmail = userPrincipal.getUsername();
+
+        List<CardSummaryResponse> cardList = cardService.getCardList(memberEmail);
         return ApiResponse.success(cardList);
     }
 
     /**
-     * 공유 받은 명함 상세 조회 API
+     * 명함 상세 조회 API
      */
     @GetMapping("/{cardId}")
-    public ApiResponse<CardDetailResponse> getCardDetail(@PathVariable Long cardId) {
-        CardDetailResponse cardDetail = cardService.getCardDetail(cardId);
+    public ApiResponse<CardDetailResponse> getCardDetail(
+            @PathVariable Long cardId,
+            @AuthenticationPrincipal User userPrincipal
+    ) {
+        String memberEmail = userPrincipal.getUsername();
+        CardDetailResponse cardDetail = cardService.getCardDetail(memberEmail, cardId);
         return ApiResponse.success(cardDetail);
     }
 
@@ -42,10 +49,10 @@ public class CardController {
     @DeleteMapping("/{cardId}/my-case")
     public ApiResponse<?> removeCardFromMyCase(
             @PathVariable Long cardId,
-            // TODO: @AuthenticationPrincipal 로 로그인 사용자 정보 가져오기
-            @RequestParam Long memberId // 임시 파라미터
+            @AuthenticationPrincipal User userPrincipal
     ) {
-        cardService.removeCardFromMyCase(memberId, cardId);
+        String memberEmail = userPrincipal.getUsername();
+        cardService.removeCardFromMyCase(memberEmail, cardId);
         return ApiResponse.success();
     }
 
@@ -55,11 +62,10 @@ public class CardController {
     @DeleteMapping("/{cardId}")
     public ApiResponse<?> deleteBusinessCard(
             @PathVariable Long cardId,
-            // TODO: @AuthenticationPrincipal 로 로그인 사용자 정보 가져오기
-            @RequestParam Long memberId // 임시 파라미터
+            @AuthenticationPrincipal User userPrincipal
     ) throws AccessDeniedException {
-        // TODO: 삭제하더라도 공유받은 사람은 정보를 볼 수 있어야 한다??
-        cardService.deleteBusinessCard(memberId, cardId);
+        String memberEmail = userPrincipal.getUsername();
+        cardService.deleteBusinessCard(memberEmail, cardId);
         return ApiResponse.success();
     }
 }
